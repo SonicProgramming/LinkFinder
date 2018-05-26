@@ -23,7 +23,8 @@ extern (C) int UIAppMain(string[] args) {
                 TextWidget { text: "2 - Get the download link"; textColor: "black"; fontSize: 100%; fontWeight: 750; fontFace: "Arial" }
                 TextWidget { text: "3 - Paste the link to the field below"; textColor: "black"; fontSize: 100%; fontWeight: 750; fontFace: "Arial" }
                 TextWidget { text: "4 - Press the button"; textColor: "black"; fontSize: 100%; fontWeight: 750; fontFace: "Arial" }
-                TextWidget { text: "5 - Receive the direct link in the second field below"; textColor: "black"; fontSize: 100%; fontWeight: 750; fontFace: "Arial" }
+                TextWidget { text: "5 - Receive the direct link in the second field below"; textColor: "black"; fontSize: 100%; fontWeight: 750; fontFace: "Arial" }
+
                 TextWidget { text: " "; textColor: "black"; fontSize: 100%; fontWeight: 750; fontFace: "Arial" }
             }
             
@@ -59,34 +60,14 @@ extern (C) int UIAppMain(string[] args) {
     return Platform.instance.enterMessageLoop();
 }
 
-string runDropbox(string initialLink){
-    string partOne = substring(initialLink, 8);
-    return "https://dl."~partOne~"?dl=1";
-}
+
+string runDropbox(string initialLink)
+    return "https://dl."~initialLink[8..$]~"?dl=1";
 
 string runGoogleDrive(string initialLink){
-    int beginIndex = initialLink.indexOf("open?id=");
-    string fileId = substring(initialLink, beginIndex+8);
-    return "https://drive.google.com/uc?export=download&confirm=no_antivirus&id="~fileId;
+    int index = initialLink.indexOf("open?id=") + 8;
+    return "https://drive.google.com/uc?export=download&confirm=no_antivirus&id="~initialLink[index..$];
 }
 
-string runYandexDrive(string initialLink){
+string runYandexDrive(string initialLink)
     return "https://getfile.dokpub.com/yandex/get/"~initialLink;
-}
-
-//I couldn't find it in std lib, so i made it myself lol
-string substring(string str, int beginIndex, int endIndex){
-    string toret = "";
-    foreach(i; beginIndex..endIndex){
-       toret ~= text(str[i]);
-    }
-    return toret;
-}
-
-string substring(string str, int beginIndex){
-    string toret = "";
-    foreach(i; beginIndex..str.length){
-       toret ~= text(str[i]);
-    }
-    return toret;
-}
